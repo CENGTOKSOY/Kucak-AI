@@ -12,6 +12,9 @@ def get_chat_service():
 def get_rag_service():
     return RAGService()
 
+def get_rag_service():
+    return RAGService()
+
 @app.post("/api/chats")
 async def create_chat(service: ChatService = Depends(get_chat_service)):
     return await service.create_chat()
