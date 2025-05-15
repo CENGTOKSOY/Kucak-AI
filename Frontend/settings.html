@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ayarlar - Kucak AI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #121212;
+            --bg-darker: #0a0a0a;
+            --bg-panel: #1e1e1e;
+            --primary-text: #e0e0e0;
+            --secondary-text: #a0a0a0;
+            --accent-color: #3a3a3a;
+            --input-bg: #2d2d2d;
+            --border-color: #333;
+            --primary-pink: #e83f8d;
+            --success-color: #34a853;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --premium-color: #ffd700;
+            --sidebar-width: 280px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--primary-text);
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* Sol Panel */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--bg-darker);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            transition: transform 0.3s ease;
+            position: fixed;
+            z-index: 100;
+        }
+
+        .sidebar.collapsed {
+            transform: translateX(-100%);
+        }
+
+        .sidebar-header {
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .new-chat-btn {
+            background-color: var(--accent-color);
+            color: var(--primary-text);
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .new-chat-btn i {
+            margin-right: 5px;
+            color: var(--primary-pink);
+        }
+
+        .search-bar {
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 8px 12px;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            color: var(--primary-text);
+        }
+
+        .chat-history {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px 0;
+        }
+
+        .chat-item {
+            padding: 12px 15px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-left: 3px solid transparent;
+        }
+
+        .chat-item:hover {
+            background-color: var(--bg-panel);
+        }
+
+        .chat-item.active {
+            background-color: var(--accent-color);
+            border-left: 3px solid var(--primary-text);
+        }
+
+        /* Profile Dropdown */
+        .profile-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: var(--bg-panel);
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 5px;
+            border: 1px solid var(--border-color);
+        }
+
+        .dropdown-content a {
+            color: var(--primary-text);
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            font-size: 0.9rem;
+        }
+
+        .dropdown-content a:hover {
+            background-color: var(--accent-color);
+        }
+
+        .profile-dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Ana İçerik */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            margin-left: var(--sidebar-width);
+            transition: margin-left 0.3s ease;
+            width: calc(100% - var(--sidebar-width));
+        }
+
+        .sidebar.collapsed ~ .main-content {
+            margin-left: 0;
+            width: 100%;
+        }
+
+        .top-bar {
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .top-bar-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .toggle-sidebar-main {
+            background: none;
+            border: none;
+            color: var(--secondary-text);
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar.collapsed ~ .main-content .toggle-sidebar-main {
+            transform: rotate(90deg);
+        }
+
+        .app-title-button {
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            font: inherit;
+            color: inherit;
+        }
+
+        .app-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: opacity 0.2s;
+        }
+
+        .app-title:hover {
+            opacity: 0.8;
+        }
+
+        .app-logo {
+            font-size: 1.2rem;
+            color: var(--primary-pink);
+            transition: transform 0.3s;
+        }
+
+        .app-title-button:hover .app-logo {
+            transform: rotate(15deg);
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .profile i {
+            margin-left: 8px;
+            color: var(--secondary-text);
+            font-size: 1.4rem;
+        }
+
+        .header-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            margin-left: 8px;
+            object-fit: cover;
+            border: 2px solid var(--primary-pink);
+            display: none;
+        }
+
+        /* Geliştirilmiş Ayarlar Sayfası */
+        .settings-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .settings-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .settings-header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--primary-pink);
+        }
+
+        .settings-header p {
+            color: var(--secondary-text);
+            font-size: 0.95rem;
+        }
+
+        .settings-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            padding: 12px 20px;
+            background: none;
+            border: none;
+            color: var(--secondary-text);
+            cursor: pointer;
+            font-size: 0.95rem;
+            position: relative;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .tab-btn.active {
+            color: var(--primary-text);
+            font-weight: 500;
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--primary-pink);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 0 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .settings-section {
+            margin-bottom: 30px;
+        }
+
+        .settings-section h2 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--primary-pink);
+        }
+
+        .settings-section h2 i {
+            color: var(--secondary-text);
+            font-size: 1.1rem;
+        }
+
+        .setting-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .setting-card {
+            background-color: var(--bg-panel);
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .setting-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .setting-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .setting-card-header h3 {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .setting-card-body {
+            color: var(--secondary-text);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .setting-card-footer {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        /* Özel kontrol stilleri */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--input-bg);
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: var(--primary-text);
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary-pink);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        select {
+            background-color: var(--input-bg);
+            color: var(--primary-text);
+            border: 1px solid var(--border-color);
+            padding: 8px 12px;
+            border-radius: 5px;
+            width: 100%;
+        }
+
+        .color-picker {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .color-option {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: transform 0.2s;
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+
+        .color-option.selected {
+            border-color: var(--primary-text);
+            transform: scale(1.1);
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-pink);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #c93477;
+        }
+
+        .btn-secondary {
+            background-color: var(--accent-color);
+            color: var(--primary-text);
+        }
+
+        .btn-secondary:hover {
+            background-color: #4a4a4a;
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #bb2d3b;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* İlerleme çubuğu */
+        .progress-container {
+            margin-top: 20px;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 0.85rem;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background-color: var(--input-bg);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary-pink);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                z-index: 100;
+                height: 100%;
+            }
+
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .sidebar:not(.collapsed) {
+                z-index: 1000;
+            }
+
+            .app-title {
+                font-size: 1rem;
+            }
+
+            .app-logo {
+                font-size: 1.2rem;
+            }
+
+            .settings-tabs {
+                overflow-x: auto;
+                padding-bottom: 5px;
+            }
+
+            .tab-btn {
+                padding: 10px 15px;
+                font-size: 0.85rem;
+                white-space: nowrap;
+            }
+
+            .setting-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sol Panel -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <button class="new-chat-btn" id="new-chat-btn">
+                <i class="fas fa-comment-medical"></i>
+                <span>Yeni Sohbet</span>
+            </button>
+        </div>
+
+        <div class="search-bar">
+            <input type="text" placeholder="Sohbet ara...">
+        </div>
+
+        <div class="chat-history" id="chat-history">
+            <!-- Sohbet geçmişi buraya dinamik olarak eklenecek -->
+        </div>
+    </div>
+
+    <!-- Ana İçerik -->
+    <div class="main-content">
+        <div class="top-bar">
+            <div class="top-bar-left">
+                <button class="toggle-sidebar-main" id="toggle-sidebar-main">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <button class="app-title-button" id="home-button">
+                    <div class="app-title">
+                        <i class="fas fa-baby app-logo"></i>
+                        <span>Kucak AI</span>
+                    </div>
+                </button>
+            </div>
+            <div class="profile-dropdown">
+                <div class="profile">
+                    <span id="profile-name">Ayşe Demir</span>
+                    <img id="header-avatar" src="" alt="Profil" class="header-avatar">
+                    <i class="fas fa-user-circle" id="header-avatar-icon"></i>
+                </div>
+                <div class="dropdown-content">
+                    <a href="profile.html"><i class="fas fa-user"></i> Profil</a>
+                    <a href="upgradeplan.html"><i class="fas fa-crown"></i> Planı Yükselt</a>
+                    <a href="settings.html"><i class="fas fa-cog"></i> Ayarlar</a>
+                    <a href="logout.html"><i class="fas fa-sign-out-alt"></i> Oturumu Kapat</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="settings-container">
+            <div class="settings-header">
+                <h1><i class="fas fa-cog"></i> Ayarlar</h1>
+                <p>Gebelik ve doğum sonrası asistanınızı kişiselleştirin</p>
+            </div>
+
+            <div class="settings-tabs">
+                <button class="tab-btn active" data-tab="general"><i class="fas fa-sliders-h"></i> Genel</button>
+                <button class="tab-btn" data-tab="notifications"><i class="fas fa-bell"></i> Bildirimler</button>
+                <button class="tab-btn" data-tab="health"><i class="fas fa-heart-pulse"></i> Sağlık Verileri</button>
+                <button class="tab-btn" data-tab="privacy"><i class="fas fa-user-shield"></i> Gizlilik</button>
+                <button class="tab-btn" data-tab="account"><i class="fas fa-user-cog"></i> Hesap</button>
+            </div>
+
+            <!-- Genel Ayarlar -->
+            <div class="tab-content active" id="general-tab">
+                <div class="settings-section">
+                    <h2><i class="fas fa-language"></i> Dil ve Bölge</h2>
+                    <div class="setting-grid">
+                        <div class="setting-card">
+                            <div class="setting-card-header">
+                                <h3>Uygulama Dili</h3>
+                            </div>
+                            <div class="setting-card-body">
+                                Kucak AI'nın kullanacağı varsayılan dili seçin.
+                            </div>
+                            <div class="setting-card-footer">
+                                <select>
+                                    <option>Türkçe</option>
+                                    <option>English</option>
+                                    <option>Deutsch</option>
+                                    <option>Français</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="setting-card">
+                            <div class="setting-card-header">
+                                <h3>Sağlık Sistemi</h3>
+                            </div>
+                            <div class="setting-card-body">
+                                Referans alınacak sağlık sistemini seçin.
+                            </div>
+                            <div class="setting-card-footer">
+                                <select>
+                                    <option>Türkiye</option>
+                                    <option>WHO Standartları</option>
+                                    <option>ABD</option>
+                                    <option>AB</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h2><i class="fas fa-robot"></i> Asistan Davranışı</h2>
+                    <div class="setting-grid">
+                        <div class="setting-card">
+                            <div class="setting-card-header">
+                                <h3>Yanıt Tarzı</h3>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-card-body">
+                                Daha sıcak ve destekleyici bir dil kullanılmasını sağlar.
+                            </div>
+                        </div>
+
+                        <div class="setting-card">
+                            <div class="setting-card-header">
+                                <h3>Tıbbi Referanslar</h3>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-card-body">
+                                Yanıtlarda tıbbi kaynakların ve araştırmaların gösterilmesi.
+                            </div>
+                        </div>
+
+                        <div class="setting-card">
+                            <div class="setting-card-header">
+                                <h3>Haftalık Gebelik Güncellemeleri</h3>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-card-body">
+                                Gebelik haftanıza özel otomatik bilgilendirmeler alın.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bildirim Ayarları -->
+            <div class="tab-content" id="notifications-tab">
+                <div class="settings-section">
+                    <h2><i class="fas fa-bell"></i> Uygulama Bildirimleri</h2>
+                    <div class="setting-grid">
+                        <div class="setting-card">
+                            <div class="setting-card-header">
+                                <h3>Sesli Uyarılar</h3>
+                                <label class="toggle-switch">
+                                    <input type="checkbox">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-card-body">
+                                Önemli hatırlatmalarda ses çalsın.
+                            </div>
+                        </div>
+
+                        <div class="setting-card">
+                            <div class="setting-card-header">
+                                <h3>Gebelik Hatırlatıcıları</h3>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-card-body">
+                                Kontrol tarihleri ve testler için bildirimler.
+                            </div>
+                        </div>
+
+                        <div class="setting-card">
+                            <div class="setting-card-header">
+                                <h3>Bildirim Sesi</h3>
+                            </div>
+                            <div class="setting-card-body">
+                                Bildirimler için kullanılacak sesi seçin.
+                            </div>
+                            <div class="setting-card-footer">
+                                <select>
+                                    <option selected>Yumuşak</option>
+                                    <option>Doğal</option>
+                                    <option>Klasik</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h2><i class="fas fa-envelope"></i> E-posta Bildirimleri</h2>
+                    <div class="setting-grid">
+                        <div class="setting-card">
+                            <div class="setting-card-header">
+                                <h3>Haftalık Özet</h3>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-card-body">
+                                Gebelik gelişimi ve öneriler içeren haftalık e-posta alın.
+                            </div>
+                        </div>
+
+                        <div class="setting-card">
+                            <div class="setting-card-header">
+                                <h3>Acil Durum Uyarıları</h3>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-card-body">
+                                Önemli sağlık uyarıları için e-posta alın.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sağlık Verileri -->
+            <div class="tab-content" id="health-tab">
+                <div class="settings-section">
+                    <h2><i class="fas fa-heart-pulse"></i> Gebelik Takibi</h2>
+                    <div class="setting-grid">
+                        <div class="setting-card">
+                            <div class="setting-card-header">
+                                <h3>Gebelik Haftası</h3>
+                            </div>
+                            <div class="setting-card-body">
+                                Mevcut gebelik haftanızı güncelleyin.
+                            </div>
+                            <div class="setting-card-footer">
+                                <select>
+                                    <option>4. Hafta</option>
+                                    <option>5. Hafta</option>
+                                    <!-- Diğer haftalar -->
+                                    <option selected>24. Hafta</option>
+                                    <!-- Diğer haftalar -->
+                                    <option>40. Hafta</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="setting-card">
+                            <div class="setting-card-header">
+                                <h3>Doğum Planı</h3>
+                            </div>
+                            <div class="setting-card-body">
+                                Tercih ettiğiniz doğum yöntemi ve hastane bilgisi.
+                            </div>
+                            <div class="setting-card-footer">
+                                <button class="btn btn-secondary">Düzenle</button>
+                            </div>
+                        </div>
+
+                        <div class="setting-card">
+                            <div class="setting-card-header">
+                                <h3>Sağlık Geçmişi</h3>
+                            </div>
+                            <div class="setting-card-body">
+                                Alerjiler, kronik hastalıklar ve önemli notlar.
+                            </div>
+                            <div class="setting-card-footer">
+                                <button class="btn btn-secondary">Güncelle</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h2><i class="fas fa-baby"></i> Bebek Bilgileri</h2>
+                    <div class="setting-card">
+                        <div class="setting-card-header">
+                            <h3>Bebek Profili</h3>
+                        </div>
+                        <div class="setting-card-body">
+                            Doğum sonrası bebeğinizin gelişimini takip edin.
+                            <div class="progress-container" style="margin-top: 15px;">
+                                <div class="progress-label">
+                                    <span>Profil Tamamlama</span>
+                                    <span>%65</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 65%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="setting-card-footer">
+                            <button class="btn btn-primary">Bebek Profilini Tamamla</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gizlilik Ayarları -->
+            <div class="tab-content" id="privacy-tab">
+                <div class="settings-section">
+                    <h2><i class="fas fa-database"></i> Veri Yönetimi</h2>
+                    <div class="setting-grid">
+                        <div class="setting-card">
+                            <div class="setting-card-header">
+                                <h3>Veri Toplama</h3>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-card-body">
+                                Anonim kullanım verileri toplanarak hizmet iyileştirilsin.
+                            </div>
+                        </div>
+
+                        <div class="setting-card">
+                            <div class="setting-card-header">
+                                <h3>Sohbet Geçmişi</h3>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-card-body">
+                                Danışma sohbetlerinizin sunucuda saklanması.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h2><i class="fas fa-shield-alt"></i> Güvenlik</h2>
+                    <div class="setting-grid">
+                        <div class="setting-card">
+                            <div class="setting-card-header">
+                                <h3>İki Adımlı Doğrulama</h3>
+                                <label class="toggle-switch">
+                                    <input type="checkbox">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-card-body">
+                                Hesap güvenliğiniz için ek koruma katmanı.
+                            </div>
+                        </div>
+
+                        <div class="setting-card">
+                            <div class="setting-card-header">
+                                <h3>Oturum Yönetimi</h3>
+                            </div>
+                            <div class="setting-card-body">
+                                Aktif oturumlarınızı görüntüleyin ve yönetin.
+                            </div>
+                            <div class="setting-card-footer">
+                                <button class="btn btn-secondary">Oturumları Görüntüle</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h2><i class="fas fa-eraser"></i> Verileri Temizle</h2>
+                    <div class="setting-card">
+                        <div class="setting-card-header">
+                            <h3>Hesap Verileri</h3>
+                        </div>
+                        <div class="setting-card-body">
+                            Tüm kişisel verilerinizi ve sohbet geçmişinizi kalıcı olarak silin.
+                            <div class="progress-container" style="margin-top: 15px;">
+                                <div class="progress-label">
+                                    <span>Depolama Kullanımı</span>
+                                    <span>1.8 GB / 5 GB</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 36%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="setting-card-footer">
+                            <div class="btn-group">
+                                <button class="btn btn-danger">Tüm Verileri Sil</button>
+                                <button class="btn btn-secondary">Önbelleği Temizle</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hesap Ayarları -->
+            <div class="tab-content" id="account-tab">
+                <div class="settings-section">
+                    <h2><i class="fas fa-user"></i> Profil Bilgileri</h2>
+                    <div class="setting-card">
+                        <div class="setting-card-header">
+                            <h3>Kişisel Bilgiler</h3>
+                        </div>
+                        <div class="setting-card-body">
+                            <form>
+                                <div style="margin-bottom: 15px;">
+                                    <label style="display: block; margin-bottom: 5px; font-size: 0.9rem;">Ad Soyad</label>
+                                    <input type="text" id="fullName" style="width: 100%; padding: 8px 12px; background-color: var(--input-bg); border: 1px solid var(--border-color); border-radius: 5px; color: var(--primary-text);" value="Ayşe Demir">
+                                </div>
+                                <div style="margin-bottom: 15px;">
+                                    <label style="display: block; margin-bottom: 5px; font-size: 0.9rem;">E-posta</label>
+                                    <input type="email" id="email" style="width: 100%; padding: 8px 12px; background-color: var(--input-bg); border: 1px solid var(--border-color); border-radius: 5px; color: var(--primary-text);" value="ayse@example.com">
+                                </div>
+                                <div style="margin-bottom: 15px;">
+                                    <label style="display: block; margin-bottom: 5px; font-size: 0.9rem;">Telefon</label>
+                                    <input type="tel" id="phone" style="width: 100%; padding: 8px 12px; background-color: var(--input-bg); border: 1px solid var(--border-color); border-radius: 5px; color: var(--primary-text);" value="+90 555 123 45 67">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="setting-card-footer">
+                            <button class="btn btn-primary" id="update-profile-btn">Bilgileri Güncelle</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h2><i class="fas fa-lock"></i> Şifre Değiştirme</h2>
+                    <div class="setting-card">
+                        <div class="setting-card-body">
+                            <form>
+                                <div style="margin-bottom: 15px;">
+                                    <label style="display: block; margin-bottom: 5px; font-size: 0.9rem;">Mevcut Şifre</label>
+                                    <input type="password" id="currentPassword" style="width: 100%; padding: 8px 12px; background-color: var(--input-bg); border: 1px solid var(--border-color); border-radius: 5px; color: var(--primary-text);">
+                                </div>
+                                <div style="margin-bottom: 15px;">
+                                    <label style="display: block; margin-bottom: 5px; font-size: 0.9rem;">Yeni Şifre</label>
+                                    <input type="password" id="newPassword" style="width: 100%; padding: 8px 12px; background-color: var(--input-bg); border: 1px solid var(--border-color); border-radius: 5px; color: var(--primary-text);" placeholder="En az 8 karakter">
+                                </div>
+                                <div style="margin-bottom: 15px;">
+                                    <label style="display: block; margin-bottom: 5px; font-size: 0.9rem;">Yeni Şifre (Tekrar)</label>
+                                    <input type="password" id="confirmPassword" style="width: 100%; padding: 8px 12px; background-color: var(--input-bg); border: 1px solid var(--border-color); border-radius: 5px; color: var(--primary-text);" placeholder="Yeni şifrenizi tekrar girin">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="setting-card-footer">
+                            <button class="btn btn-primary" id="change-password-btn">Şifreyi Değiştir</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h2><i class="fas fa-user-times"></i> Hesap İşlemleri</h2>
+                    <div class="setting-card">
+                        <div class="setting-card-header">
+                            <h3>Hesabı Sil</h3>
+                        </div>
+                        <div class="setting-card-body">
+                            Hesabınızı ve tüm sağlık verilerinizi kalıcı olarak silin. Bu işlem geri alınamaz.
+                        </div>
+                        <div class="setting-card-footer">
+                            <button class="btn btn-danger" id="delete-account-btn">Hesabı Sil</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.querySelector('.sidebar');
+            const toggleSidebarMain = document.getElementById('toggle-sidebar-main');
+            const newChatBtn = document.getElementById('new-chat-btn');
+            const chatHistory = document.getElementById('chat-history');
+            const homeButton = document.getElementById('home-button');
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+            const headerAvatar = document.getElementById('header-avatar');
+            const headerAvatarIcon = document.getElementById('header-avatar-icon');
+            const profileName = document.getElementById('profile-name');
+            const updateProfileBtn = document.getElementById('update-profile-btn');
+            const changePasswordBtn = document.getElementById('change-password-btn');
+            const deleteAccountBtn = document.getElementById('delete-account-btn');
+
+            // Profil bilgilerini yükle
+            function loadProfileData() {
+                const savedData = localStorage.getItem('userProfile');
+                if (savedData) {
+                    const profileData = JSON.parse(savedData);
+                    profileName.textContent = profileData.personalInfo.fullName;
+                    document.getElementById('fullName').value = profileData.personalInfo.fullName;
+                    document.getElementById('email').value = profileData.personalInfo.email;
+                    document.getElementById('phone').value = profileData.personalInfo.phone;
+
+                    if (profileData.personalInfo.avatar) {
+                        headerAvatar.src = profileData.personalInfo.avatar;
+                        headerAvatar.style.display = 'block';
+                        headerAvatarIcon.style.display = 'none';
+                    } else {
+                        headerAvatar.style.display = 'none';
+                        headerAvatarIcon.style.display = 'block';
+                    }
+                }
+            }
+
+            // Ana sayfa butonu
+            homeButton.addEventListener('click', function() {
+                window.location.href = 'index.html';
+            });
+
+            // Panel aç/kapa
+            function toggleSidebarFunc() {
+                sidebar.classList.toggle('collapsed');
+            }
+
+            toggleSidebarMain.addEventListener('click', toggleSidebarFunc);
+
+            // Yeni sohbet oluştur
+            function createNewChat() {
+                alert('Yeni gebelik danışma sohbeti oluşturulacak');
+            }
+
+            newChatBtn.addEventListener('click', createNewChat);
+
+            // Tab geçişleri
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabId = button.getAttribute('data-tab');
+
+                    // Tüm tab butonlarını ve içeriklerini pasif yap
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+
+                    // Aktif tabı ve içeriği aktif yap
+                    button.classList.add('active');
+                    document.getElementById(`${tabId}-tab`).classList.add('active');
+                });
+            });
+
+            // Profil bilgilerini güncelle
+            updateProfileBtn.addEventListener('click', function() {
+                const fullName = document.getElementById('fullName').value;
+                const email = document.getElementById('email').value;
+                const phone = document.getElementById('phone').value;
+
+                const savedData = localStorage.getItem('userProfile');
+                if (savedData) {
+                    const profileData = JSON.parse(savedData);
+                    profileData.personalInfo.fullName = fullName;
+                    profileData.personalInfo.email = email;
+                    profileData.personalInfo.phone = phone;
+
+                    localStorage.setItem('userProfile', JSON.stringify(profileData));
+                    profileName.textContent = fullName;
+                    alert('Profil bilgileriniz başarıyla güncellendi!');
+                }
+            });
+
+            // Şifre değiştirme
+            changePasswordBtn.addEventListener('click', function() {
+                const currentPassword = document.getElementById('currentPassword').value;
+                const newPassword = document.getElementById('newPassword').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+
+                if (newPassword !== confirmPassword) {
+                    alert('Yeni şifreler eşleşmiyor!');
+                    return;
+                }
+
+                if (newPassword.length < 8) {
+                    alert('Şifre en az 8 karakter olmalıdır!');
+                    return;
+                }
+
+                // Burada normalde sunucuya şifre değişikliği isteği gönderilir
+                alert('Şifreniz başarıyla değiştirildi!');
+                document.getElementById('currentPassword').value = '';
+                document.getElementById('newPassword').value = '';
+                document.getElementById('confirmPassword').value = '';
+            });
+
+            // Hesap silme
+            deleteAccountBtn.addEventListener('click', function() {
+                if (confirm('Hesabınızı ve tüm verilerinizi kalıcı olarak silmek istediğinize emin misiniz? Bu işlem geri alınamaz!')) {
+                    // Burada normalde sunucuya hesap silme isteği gönderilir
+                    localStorage.removeItem('userProfile');
+                    alert('Hesabınız başarıyla silindi. Yönlendiriliyorsunuz...');
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 2000);
+                }
+            });
+
+            // Başlangıçta bazı sohbetler ekleyelim (demo amaçlı)
+            const demoChats = [
+                { id: '1', title: 'Gebelikte beslenme danışma', messages: [] },
+                { id: '2', title: '24. hafta kontrolü', messages: [] },
+                { id: '3', title: 'Doğum öncesi hazırlık', messages: [] }
+            ];
+
+            function renderChatHistory() {
+                chatHistory.innerHTML = '';
+
+                demoChats.forEach(chat => {
+                    const chatItem = document.createElement('div');
+                    chatItem.className = 'chat-item';
+                    chatItem.innerHTML = `
+                        <div class="chat-item-content">
+                            <i class="fas fa-comment-medical"></i>
+                            <span>${chat.title}</span>
+                        </div>
+                        <div class="delete-chat" data-chat-id="${chat.id}">
+                            <i class="fas fa-trash"></i>
+                        </div>
+                    `;
+                    chatHistory.appendChild(chatItem);
+                });
+            }
+
+            // Sayfa yüklendiğinde profil verilerini yükle
+            loadProfileData();
+            renderChatHistory();
+        });
+    </script>
+</body>
+</html>
