@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gizlilik Politikası - Kucak AI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #121212;
+            --bg-darker: #0a0a0a;
+            --bg-panel: #1e1e1e;
+            --primary-text: #e0e0e0;
+            --secondary-text: #a0a0a0;
+            --accent-color: #3a3a3a;
+            --input-bg: #2d2d2d;
+            --border-color: #333;
+            --primary-pink: #e83f8d;
+            --success-green: #34a853;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--primary-text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--primary-pink);
+        }
+
+        .header p {
+            color: var(--secondary-text);
+        }
+
+        .content-section {
+            background-color: var(--bg-panel);
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+        }
+
+        h2 {
+            color: var(--primary-pink);
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            color: var(--primary-text);
+            margin: 25px 0 15px;
+            font-size: 1.3rem;
+        }
+
+        p, ul, ol {
+            margin-bottom: 15px;
+            color: var(--secondary-text);
+        }
+
+        ul, ol {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .highlight {
+            background-color: rgba(232, 63, 141, 0.1);
+            padding: 15px;
+            border-left: 3px solid var(--primary-pink);
+            margin: 20px 0;
+        }
+
+        .warning {
+            background-color: rgba(234, 67, 53, 0.1);
+            padding: 15px;
+            border-left: 3px solid #ea4335;
+            margin: 20px 0;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            color: var(--secondary-text);
+            font-size: 0.9rem;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 10px 20px;
+            background-color: var(--primary-pink);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .back-button:hover {
+            background-color: #c93477;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .data-table th, .data-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table th {
+            background-color: var(--accent-color);
+            color: var(--primary-text);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 15px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .content-section {
+                padding: 20px;
+            }
+
+            .data-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-shield-alt"></i> Kucak AI Gizlilik Politikası</h1>
+            <p>Son güncelleme: 15 Haziran 2025</p>
+        </div>
+
+        <div class="content-section">
+            <h2>1. Toplanan Bilgiler</h2>
+            <p>Kucak AI olarak, gebelik ve doğum sonrası döneme özel hizmetlerimizi sunarken aşağıdaki bilgileri topluyoruz:</p>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Veri Türü</th>
+                        <th>Toplama Amacı</th>
+                        <th>Saklama Süresi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Kişisel bilgiler (ad, e-posta, gebelik haftası)</td>
+                        <td>Kişiselleştirilmiş hizmet sunumu</td>
+                        <td>Hesap aktif olduğu sürece</td>
+                    </tr>
+                    <tr>
+                        <td>Sağlık verileri (gebelik takibi, semptomlar)</td>
+                        <td>Tıbbi önerilerin iyileştirilmesi</td>
+                        <td>5 yıl (anonim olarak)</td>
+                    </tr>
+                    <tr>
+                        <td>Kullanım verileri (sorgular, etkileşimler)</td>
+                        <td>Hizmet kalitesinin artırılması</td>
+                        <td>3 yıl</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="highlight">
+                <p><strong>Hassas Veri Taahhüdümüz:</strong> Gebelik ve sağlık verileriniz şifrelenerek saklanır, yalnızca size özel hizmet sunmak için kullanılır ve asla üçüncü taraflarla paylaşılmaz.</p>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>2. Veri Kullanımı</h2>
+
+            <h3>2.1. Kişiselleştirilmiş Hizmet</h3>
+            <ul>
+                <li>Gebelik haftanıza uygun öneriler sunma</li>
+                <li>Doğum sonrası bakım planı oluşturma</li>
+                <li>Bebek gelişim takibi sağlama</li>
+            </ul>
+
+            <h3>2.2. İyileştirme ve Araştırma</h3>
+            <ul>
+                <li>WHO standartlarına uygun içerik geliştirme</li>
+                <li>Anonim kullanım verileriyle tıbbi araştırmalar</li>
+                <li>Kullanıcı deneyimini geliştirme</li>
+            </ul>
+
+            <div class="warning">
+                <p><strong>Önemli:</strong> Kucak AI profesyonel tıbbi teşhis veya tedavi yerine geçmez. Acil durumlarda mutlaka sağlık kuruluşuna başvurun.</p>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>3. Veri Paylaşımı</h2>
+            <p>Verileriniz yalnızca aşağıdaki durumlarda paylaşılabilir:</p>
+
+            <h3>3.1. Tıbbi Acil Durumlar</h3>
+            <p>Hayati tehlike arz eden durumlarda yetkili sağlık kuruluşlarıyla paylaşılabilir.</p>
+
+            <h3>3.2. Hizmet Sağlayıcılar</h3>
+            <p>Veri depolama ve analiz için sıkı sözleşmelerle bağlı üçüncü taraflar.</p>
+        </div>
+
+        <div class="content-section">
+            <h2>4. Veri Güvenliği</h2>
+            <p>Sağlık verilerinizi korumak için endüstri standartlarının üzerinde önlemler alıyoruz:</p>
+            <ul>
+                <li>HIPAA uyumlu veri şifreleme</li>
+                <li>Biyometrik kimlik doğrulama</li>
+                <li>Düzenli güvenlik denetimleri</li>
+                <li>Veri işleme sınırlamaları</li>
+            </ul>
+        </div>
+
+        <div class="content-section">
+            <h2>5. Haklarınız</h2>
+            <p>KVKK ve GDPR kapsamında aşağıdaki haklara sahipsiniz:</p>
+
+            <ul>
+                <li>Verilerinize erişim ve düzeltme</li>
+                <li>Veri silinmesini talep etme</li>
+                <li>Veri işlemeye itiraz hakkı</li>
+                <li>Hesabınızı dondurma</li>
+            </ul>
+
+            <p>Haklarınızı kullanmak için <a href="mailto:kvkk@kucakai.com" style="color: var(--primary-pink);">kvkk@kucakai.com</a> adresine başvurabilirsiniz.</p>
+        </div>
+
+        <div class="footer">
+            <a href="signup.html" class="back-button"><i class="fas fa-arrow-left"></i> Kayıt Sayfasına Dön</a>
+            <p>© 2025 Kucak AI - Tüm hakları saklıdır</p>
+            <p style="margin-top: 10px; font-size: 0.8rem;">Bu politika 6698 sayılı KVKK, GDPR ve HIPAA standartlarına uygundur</p>
+        </div>
+    </div>
+</body>
+</html>
